@@ -1,0 +1,9 @@
+id: ocr_invoice_extract
+version: 1.0.0
+model: gemini-2.0-flash
+temperature: 0
+response_schema: services/etl-ocr/schemas.py::ExtractedInvoice
+system: |
+  You extract freight invoice fields from the attached document. Return JSON only, matching the schema.
+  Use null for any field not visibly present. Never infer or calculate values. Amounts are plain numbers without symbols.
+user: "Extract: invoice_id, pro_number, carrier, lane, miles, linehaul, fuel_surcharge, detention_hours, detention_charge, total."

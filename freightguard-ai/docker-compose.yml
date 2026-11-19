@@ -1,0 +1,38 @@
+# Run `python data/generator/generate.py` first: images copy the generated seed data.
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    environment: {POSTGRES_USER: fg, POSTGRES_PASSWORD: fg, POSTGRES_DB: freightguard}
+    ports: ["5432:5432"]
+    volumes: [pgdata:/var/lib/postgresql/data, ./infra/init.sql:/docker-entrypoint-initdb.d/01_init.sql:ro, ./bi/powerbi/views.sql:/docker-entrypoint-initdb.d/02_views.sql:ro]
+    healthcheck: {test: ["CMD-SHELL", "pg_isready -U fg"], interval: 5s, retries: 10}
+  mongo:
+    image: mongo:7
+    ports: ["27017:27017"]
+    volumes: [mongodata:/data/db]
+  n8n:
+    image: n8nio/n8n
+    ports: ["5678:5678"]
+    volumes: [./workflows/n8n:/workflows:ro, n8ndata:/home/node/.n8n]
+  etl-ocr:
+    build: {context: ., dockerfile: services/etl-ocr/Dockerfile}
+    environment: {GEMINI_API_KEY: "${GEMINI_API_KEY:-}"}
+    ports: ["8003:8003"]
+  risk-engine:
+    build: {context: ., dockerfile: services/ml-risk-engine/Dockerfile}
+    ports: ["8001:8001"]
+  dispute-agent:
+    build: {context: ., dockerfile: services/dispute-agent/Dockerfile}
+    environment: {DATABASE_URL: "postgresql://fg:fg@postgres:5432/freightguard", GEMINI_API_KEY: "${GEMINI_API_KEY:-}"}
+    depends_on: {postgres: {condition: service_healthy}}
+    ports: ["8002:8002"]
+  node-api:
+    build: services/node-api
+    environment: {N8N_WEBHOOK: "http://n8n:5678/webhook/freightguard-approved", RISK_URL: "http://risk-engine:8001", AGENT_URL: "http://dispute-agent:8002", MONGO_URL: "mongodb://mongo:27017", DATABASE_URL: "postgres://fg:fg@postgres:5432/freightguard"}
+    depends_on: [postgres, mongo, risk-engine, dispute-agent]
+    ports: ["4000:4000"]
+  ops-portal:
+    build: apps/ops-portal
+    depends_on: [node-api]
+    ports: ["5173:80"]
+volumes: {pgdata: {}, mongodata: {}, n8ndata: {}}

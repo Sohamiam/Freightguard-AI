@@ -1,0 +1,5 @@
+pydantic>=2.6
+pyyaml
+google-genai
+pandas
+openpyxl

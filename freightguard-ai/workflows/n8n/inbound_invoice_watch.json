@@ -1,0 +1,17 @@
+{
+  "name": "FreightGuard - inbound invoice watch",
+  "nodes": [
+    { "parameters": { "rule": { "interval": [{ "field": "minutes", "minutesInterval": 5 }] } }, "name": "Every 5 min", "type": "n8n-nodes-base.scheduleTrigger", "typeVersion": 1.2, "position": [0, 0] },
+    { "parameters": { "method": "POST", "url": "http://etl-ocr:8003/ingest/scan", "options": {} }, "name": "Scan inbox + OCR", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [240, 0] },
+    { "parameters": { "conditions": { "number": [{ "value1": "={{$json.new}}", "operation": "larger", "value2": 0 }] } }, "name": "Any new invoices?", "type": "n8n-nodes-base.if", "typeVersion": 1, "position": [480, 0] },
+    { "parameters": { "fieldToSplitOut": "invoices", "options": {} }, "name": "Split invoices", "type": "n8n-nodes-base.splitOut", "typeVersion": 1, "position": [720, -80] },
+    { "parameters": { "method": "POST", "url": "http://node-api:4000/api/invoices/score", "sendBody": true, "specifyBody": "json", "jsonBody": "={{ { invoice: $json } }}", "options": {} }, "name": "Score invoice", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [960, -80] }
+  ],
+  "connections": {
+    "Every 5 min": { "main": [[{ "node": "Scan inbox + OCR", "type": "main", "index": 0 }]] },
+    "Scan inbox + OCR": { "main": [[{ "node": "Any new invoices?", "type": "main", "index": 0 }]] },
+    "Any new invoices?": { "main": [[{ "node": "Split invoices", "type": "main", "index": 0 }], []] },
+    "Split invoices": { "main": [[{ "node": "Score invoice", "type": "main", "index": 0 }]] }
+  },
+  "active": false, "settings": {}, "tags": []
+}

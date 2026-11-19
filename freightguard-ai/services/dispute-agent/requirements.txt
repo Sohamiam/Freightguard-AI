@@ -1,0 +1,11 @@
+langgraph
+langchain-core
+langgraph-checkpoint-postgres
+psycopg[binary]
+pgvector
+flashrank
+fastapi
+uvicorn
+pydantic>=2.6
+pyyaml
+google-genai

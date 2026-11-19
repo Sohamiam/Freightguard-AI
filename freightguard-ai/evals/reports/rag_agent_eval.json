@@ -1,0 +1,15 @@
+{
+  "invoices_evaluated": 673,
+  "detection_precision": 0.9841269841269841,
+  "detection_recall": 0.8493150684931506,
+  "math_correctness_within_$15": 1.0,
+  "citation_accuracy": 1.0,
+  "audit_chain_valid": true,
+  "est_tokens_per_1000_disputes": {
+    "input": 254444,
+    "output": 63111
+  },
+  "est_usd_per_1000_disputes": 0.0507,
+  "reranker_backend": "lexical-fallback",
+  "note": "Deterministic template drafter (no LLM) in this run; token/USD figures are estimates."
+}

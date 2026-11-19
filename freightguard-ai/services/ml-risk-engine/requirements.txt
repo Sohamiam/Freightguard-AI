@@ -1,0 +1,10 @@
+pandas
+numpy
+scikit-learn
+xgboost
+imbalanced-learn
+shap
+fastapi
+uvicorn
+pydantic>=2.6
+joblib

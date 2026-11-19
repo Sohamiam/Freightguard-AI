@@ -1,0 +1,44 @@
+{
+  "ocr": {
+    "backend": "regex-baseline",
+    "documents": 22,
+    "doc_exact_match": 0.9090909090909091,
+    "field_precision": 0.9292929292929293,
+    "field_recall": 0.9292929292929293,
+    "field_f1": 0.9292929292929293
+  },
+  "ml": {
+    "threshold": 0.9953417778015137,
+    "test": {
+      "logreg": {
+        "pr_auc": 0.7047500064523359,
+        "f1": 0.5853658536585366,
+        "precision_at_k": 0.6666666666666666
+      },
+      "xgboost": {
+        "pr_auc": 0.7159056431689627,
+        "f1": 0.8,
+        "precision_at_k": 0.6666666666666666
+      },
+      "isolation_forest": {
+        "pr_auc": 0.6966705618933172,
+        "f1": 0.6666666666666666,
+        "precision_at_k": 0.6666666666666666
+      }
+    }
+  },
+  "rag_agent": {
+    "invoices_evaluated": 673,
+    "detection_precision": 0.9841269841269841,
+    "detection_recall": 0.8493150684931506,
+    "math_correctness_within_$15": 1.0,
+    "citation_accuracy": 1.0,
+    "audit_chain_valid": true,
+    "est_tokens_per_1000_disputes": {
+      "input": 254444,
+      "output": 63111
+    },
+    "est_usd_per_1000_disputes": 0.0507,
+    "note": "Deterministic template drafter (no LLM) in this run; token/USD figures are estimates."
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "backend": "regex-baseline",
+  "documents": 22,
+  "doc_exact_match": 0.9090909090909091,
+  "field_precision": 0.9292929292929293,
+  "field_recall": 0.9292929292929293,
+  "field_f1": 0.9292929292929293
+}

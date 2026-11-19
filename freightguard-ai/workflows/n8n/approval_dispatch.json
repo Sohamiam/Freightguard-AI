@@ -1,0 +1,9 @@
+{
+  "name": "FreightGuard - approval webhook -> carrier email",
+  "nodes": [
+    { "parameters": { "httpMethod": "POST", "path": "freightguard-approved", "options": {} }, "name": "Approval webhook", "type": "n8n-nodes-base.webhook", "typeVersion": 1.1, "position": [0, 0], "webhookId": "freightguard-approved" },
+    { "parameters": { "fromEmail": "ap-disputes@freightguard.example", "toEmail": "={{ $json.body.to ?? 'carrier-ap@example.com' }}", "subject": "={{ 'Billing dispute - ' + $json.body.thread_id }}", "text": "={{ $json.body.body ?? 'See attached dispute notice.' }}", "options": {} }, "name": "Email carrier", "type": "n8n-nodes-base.emailSend", "typeVersion": 2.1, "position": [240, 0] }
+  ],
+  "connections": { "Approval webhook": { "main": [[{ "node": "Email carrier", "type": "main", "index": 0 }]] } },
+  "active": false, "settings": {}, "tags": []
+}
